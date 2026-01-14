@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Prevent horizontal scroll on all containers */
+.MuiContainer-root {
+  max-width: 100% !important;
+  overflow-x: hidden;
+}
+
+/* Ensure tables don't overflow */
+.MuiTableContainer-root {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for mobile devices */
+@media (max-width: 600px) {
+  body {
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  .MuiContainer-root {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
