@@ -15,19 +15,6 @@ import { Button as AntButton, Space, Tag } from "antd";
 import { EditOutlined, DeleteOutlined, StarOutlined, ClockCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import CancelIcon from "@mui/icons-material/Cancel";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-
-const statusColors = {
-  pending: "warning",
-  confirmed: "success",
-  cancelled: "error",
-  scheduled: "info",
-  in_progress: "info",
-  done: "success",
-};
 
 const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }) => {
   return (
@@ -125,7 +112,7 @@ const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }
                           icon={<StarOutlined />}
                           onClick={() => onEvaluate && onEvaluate(appt)}
                         >
-                          
+
                         </AntButton>
                       ) : (
                         <AntButton
@@ -133,7 +120,7 @@ const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }
                           icon={<EditOutlined />}
                           onClick={() => onEdit && onEdit(appt.id, appt)}
                         >
-                          
+
                         </AntButton>
                       )}
                       <AntButton
@@ -142,7 +129,7 @@ const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }
                         icon={<DeleteOutlined />}
                         onClick={() => onDelete && onDelete(appt.id)}
                       >
-                        
+
                       </AntButton>
                     </Space>
                   </TableCell>

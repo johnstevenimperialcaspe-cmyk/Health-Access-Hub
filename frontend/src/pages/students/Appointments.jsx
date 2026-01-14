@@ -15,17 +15,8 @@ import { Button as AntButton, Space, Tag } from "antd";
 import { EditOutlined, DeleteOutlined, StarOutlined, ClockCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import AddIcon from "@mui/icons-material/Add";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import CancelIcon from "@mui/icons-material/Cancel";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 
-const statusColors = {
-  pending: "warning",
-  confirmed: "success",
-  cancelled: "error",
-  scheduled: "info",
-};
+
 
 const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }) => {
   return (
@@ -96,26 +87,26 @@ const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }
                     </Box>
                   </TableCell>
                   <TableCell>{appt.purpose || "N/A"}</TableCell>
-                  
-                    <TableCell>
-                      {(() => {
-                        const status = (appt.status || "pending").toLowerCase();
-                        const config = {
-                          pending: { color: "warning", icon: <ClockCircleOutlined /> },
-                          scheduled: { color: "processing", icon: <ClockCircleOutlined /> },
-                          confirmed: { color: "success", icon: <CheckCircleOutlined /> },
-                          in_progress: { color: "processing", icon: <ClockCircleOutlined /> },
-                          done: { color: "success", icon: <CheckCircleOutlined /> },
-                          cancelled: { color: "error" },
-                        };
-                        const { color, icon } = config[status] || {};
-                        return (
-                          <Tag color={color} icon={icon} style={{ textTransform: "uppercase", fontWeight: 600 }}>
-                            {(appt.status || "pending").replace("_", " ").toUpperCase()}
-                          </Tag>
-                        );
-                      })()}
-                    </TableCell>
+
+                  <TableCell>
+                    {(() => {
+                      const status = (appt.status || "pending").toLowerCase();
+                      const config = {
+                        pending: { color: "warning", icon: <ClockCircleOutlined /> },
+                        scheduled: { color: "processing", icon: <ClockCircleOutlined /> },
+                        confirmed: { color: "success", icon: <CheckCircleOutlined /> },
+                        in_progress: { color: "processing", icon: <ClockCircleOutlined /> },
+                        done: { color: "success", icon: <CheckCircleOutlined /> },
+                        cancelled: { color: "error" },
+                      };
+                      const { color, icon } = config[status] || {};
+                      return (
+                        <Tag color={color} icon={icon} style={{ textTransform: "uppercase", fontWeight: 600 }}>
+                          {(appt.status || "pending").replace("_", " ").toUpperCase()}
+                        </Tag>
+                      );
+                    })()}
+                  </TableCell>
                   <TableCell align="center">
                     <Space>
                       {appt.status === "confirmed" || appt.status === "completed" ? (
@@ -124,7 +115,7 @@ const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }
                           icon={<StarOutlined />}
                           onClick={() => onEvaluate && onEvaluate(appt)}
                         >
-                          
+
                         </AntButton>
                       ) : (
                         <AntButton
@@ -132,7 +123,7 @@ const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }
                           icon={<EditOutlined />}
                           onClick={() => onEdit && onEdit(appt.id, appt)}
                         >
-                          
+
                         </AntButton>
                       )}
                       <AntButton
@@ -141,7 +132,7 @@ const Appointments = ({ appointments = [], onAdd, onEdit, onDelete, onEvaluate }
                         icon={<DeleteOutlined />}
                         onClick={() => onDelete && onDelete(appt.id)}
                       >
-                        
+
                       </AntButton>
                     </Space>
                   </TableCell>

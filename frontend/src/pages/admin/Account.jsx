@@ -7,11 +7,9 @@ import {
   TextField,
   Grid,
   Paper,
-  IconButton,
   Divider,
   Chip,
   Alert,
-  Skeleton,
   CircularProgress,
   InputAdornment,
 } from "@mui/material";
@@ -19,7 +17,6 @@ import {
   Edit as EditIcon,
   Save as SaveIcon,
   Cancel as CancelIcon,
-  CameraAlt as CameraIcon,
   Email as EmailIcon,
   Phone as PhoneIcon,
   Badge as BadgeIcon,
@@ -28,7 +25,6 @@ import {
 } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
-import axios from "axios";
 import api from "../../utils/axios";
 
 /*-------MAIN COMPONENT     */
@@ -65,9 +61,8 @@ const Account = () => {
   const toUpper = (str) => (str ?? "").toUpperCase();
 
   // ---------- DISPLAY NAME ----------
-  const rawFullName = `${formData.first_name || ""} ${
-    formData.last_name || ""
-  }`.trim();
+  const rawFullName = `${formData.first_name || ""} ${formData.last_name || ""
+    }`.trim();
   const fullName = rawFullName ? capitalise(rawFullName) : "Admin User";
 
   // ---------- AVATAR ----------
@@ -379,28 +374,28 @@ const Account = () => {
                 </Grid>
 
                 {/* Department */}
-<Grid xs={12} md={6}>
-  <TextField
-    label="Department"
-    name="department"
-    value={formData.department || ""}
-    onChange={(e) =>
-      setFormData((prev) => ({
-        ...prev,
-        department: e.target.value,   // ← no uppercase
-      }))
-    }
-    fullWidth
-    disabled={!isEditing}
-    InputProps={{
-      startAdornment: (
-        <InputAdornment position="start">
-          <SchoolIcon color="action" fontSize="small" />
-        </InputAdornment>
-      ),
-    }}
-  />
-</Grid>
+                <Grid xs={12} md={6}>
+                  <TextField
+                    label="Department"
+                    name="department"
+                    value={formData.department || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        department: e.target.value,   // ← no uppercase
+                      }))
+                    }
+                    fullWidth
+                    disabled={!isEditing}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SchoolIcon color="action" fontSize="small" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
 
 
                 {/* Job Position */}
@@ -412,7 +407,7 @@ const Account = () => {
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        position: e.target.value, 
+                        position: e.target.value,
                       }))
                     }
                     fullWidth

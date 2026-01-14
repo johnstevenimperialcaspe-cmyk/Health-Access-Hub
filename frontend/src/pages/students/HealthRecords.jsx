@@ -22,7 +22,6 @@ import {
 } from "@mui/material";
 import { Button as AntButton } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import HealingIcon from "@mui/icons-material/Healing";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -220,7 +219,7 @@ const HealthRecords = ({ records = [] }) => {
                         icon={<EyeOutlined />}
                         onClick={() => handleViewRecord(record)}
                       >
-                        
+
                       </AntButton>
                     </TableCell>
                   </TableRow>
@@ -261,125 +260,125 @@ const HealthRecords = ({ records = [] }) => {
                     Date of Visit
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    {selectedRecord.date_of_visit 
+                    {selectedRecord.date_of_visit
                       ? new Date(selectedRecord.date_of_visit).toLocaleDateString()
                       : "N/A"}
                   </Typography>
                 </Grid>
                 {selectedRecord.chief_complaint ===
                   "Physical/Medical Examination" && (
-                  <>
-                    <Divider sx={{ my: 2, width: "100%" }} />
-                    <Grid xs={12}>
-                      <Typography variant="h6" gutterBottom>
-                        Physical Examination
-                      </Typography>
-                      <Grid container spacing={2}>
-                        {selectedRecord.vital_height && (
-                          <Grid xs={6} md={3}>
-                            <Typography variant="caption" color="text.secondary">
-                              Height
-                            </Typography>
-                            <Typography variant="body2">
-                              {selectedRecord.vital_height} cm
-                            </Typography>
-                          </Grid>
-                        )}
-                        {selectedRecord.vital_weight && (
-                          <Grid xs={6} md={3}>
-                            <Typography variant="caption" color="text.secondary">
-                              Weight
-                            </Typography>
-                            <Typography variant="body2">
-                              {selectedRecord.vital_weight} kg
-                            </Typography>
-                          </Grid>
-                        )}
-                        {selectedRecord.vital_blood_pressure && (
-                          <Grid xs={6} md={3}>
-                            <Typography variant="caption" color="text.secondary">
-                              Blood Pressure
-                            </Typography>
-                            <Typography variant="body2">
-                              {selectedRecord.vital_blood_pressure}
-                            </Typography>
-                          </Grid>
-                        )}
-                        {selectedRecord.vital_heart_rate && (
-                          <Grid xs={6} md={3}>
-                            <Typography variant="caption" color="text.secondary">
-                              Heart Rate
-                            </Typography>
-                            <Typography variant="body2">
-                              {selectedRecord.vital_heart_rate} bpm
-                            </Typography>
-                          </Grid>
-                        )}
-                        {selectedRecord.vital_respiratory_rate && (
-                          <Grid xs={6} md={3}>
-                            <Typography variant="caption" color="text.secondary">
-                              Respiratory Rate
-                            </Typography>
-                            <Typography variant="body2">
-                              {selectedRecord.vital_respiratory_rate} breaths/min
-                            </Typography>
-                          </Grid>
-                        )}
-                        {selectedRecord.vital_temperature && (
-                          <Grid xs={6} md={3}>
-                            <Typography variant="caption" color="text.secondary">
-                              Temperature
-                            </Typography>
-                            <Typography variant="body2">
-                              {selectedRecord.vital_temperature} °C
-                            </Typography>
-                          </Grid>
-                        )}
+                    <>
+                      <Divider sx={{ my: 2, width: "100%" }} />
+                      <Grid xs={12}>
+                        <Typography variant="h6" gutterBottom>
+                          Physical Examination
+                        </Typography>
+                        <Grid container spacing={2}>
+                          {selectedRecord.vital_height && (
+                            <Grid xs={6} md={3}>
+                              <Typography variant="caption" color="text.secondary">
+                                Height
+                              </Typography>
+                              <Typography variant="body2">
+                                {selectedRecord.vital_height} cm
+                              </Typography>
+                            </Grid>
+                          )}
+                          {selectedRecord.vital_weight && (
+                            <Grid xs={6} md={3}>
+                              <Typography variant="caption" color="text.secondary">
+                                Weight
+                              </Typography>
+                              <Typography variant="body2">
+                                {selectedRecord.vital_weight} kg
+                              </Typography>
+                            </Grid>
+                          )}
+                          {selectedRecord.vital_blood_pressure && (
+                            <Grid xs={6} md={3}>
+                              <Typography variant="caption" color="text.secondary">
+                                Blood Pressure
+                              </Typography>
+                              <Typography variant="body2">
+                                {selectedRecord.vital_blood_pressure}
+                              </Typography>
+                            </Grid>
+                          )}
+                          {selectedRecord.vital_heart_rate && (
+                            <Grid xs={6} md={3}>
+                              <Typography variant="caption" color="text.secondary">
+                                Heart Rate
+                              </Typography>
+                              <Typography variant="body2">
+                                {selectedRecord.vital_heart_rate} bpm
+                              </Typography>
+                            </Grid>
+                          )}
+                          {selectedRecord.vital_respiratory_rate && (
+                            <Grid xs={6} md={3}>
+                              <Typography variant="caption" color="text.secondary">
+                                Respiratory Rate
+                              </Typography>
+                              <Typography variant="body2">
+                                {selectedRecord.vital_respiratory_rate} breaths/min
+                              </Typography>
+                            </Grid>
+                          )}
+                          {selectedRecord.vital_temperature && (
+                            <Grid xs={6} md={3}>
+                              <Typography variant="caption" color="text.secondary">
+                                Temperature
+                              </Typography>
+                              <Typography variant="body2">
+                                {selectedRecord.vital_temperature} °C
+                              </Typography>
+                            </Grid>
+                          )}
+                        </Grid>
                       </Grid>
-                    </Grid>
-                    <Divider sx={{ my: 2, width: "100%" }} />
-                    <Grid xs={12}>
-                      <Typography variant="h6" gutterBottom>
-                        Medical Examination
-                      </Typography>
-                      {(() => {
-                        const notes = parseNotes(selectedRecord.notes);
-                        return (
-                          <>
-                            {notes.medical?.findings && (
-                              <Box sx={{ mb: 2 }}>
-                                <Typography
-                                  variant="subtitle2"
-                                  color="primary"
-                                  gutterBottom
-                                >
-                                  Findings:
-                                </Typography>
-                                <Typography variant="body2" sx={{ pl: 2 }}>
-                                  {notes.medical.findings}
-                                </Typography>
-                              </Box>
-                            )}
-                            {notes.medical?.recommendation && (
-                              <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  color="success.main"
-                                  gutterBottom
-                                >
-                                  Recommendation:
-                                </Typography>
-                                <Typography variant="body2" sx={{ pl: 2 }}>
-                                  {notes.medical.recommendation}
-                                </Typography>
-                              </Box>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </Grid>
-                  </>
-                )}
+                      <Divider sx={{ my: 2, width: "100%" }} />
+                      <Grid xs={12}>
+                        <Typography variant="h6" gutterBottom>
+                          Medical Examination
+                        </Typography>
+                        {(() => {
+                          const notes = parseNotes(selectedRecord.notes);
+                          return (
+                            <>
+                              {notes.medical?.findings && (
+                                <Box sx={{ mb: 2 }}>
+                                  <Typography
+                                    variant="subtitle2"
+                                    color="primary"
+                                    gutterBottom
+                                  >
+                                    Findings:
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ pl: 2 }}>
+                                    {notes.medical.findings}
+                                  </Typography>
+                                </Box>
+                              )}
+                              {notes.medical?.recommendation && (
+                                <Box>
+                                  <Typography
+                                    variant="subtitle2"
+                                    color="success.main"
+                                    gutterBottom
+                                  >
+                                    Recommendation:
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ pl: 2 }}>
+                                    {notes.medical.recommendation}
+                                  </Typography>
+                                </Box>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </Grid>
+                    </>
+                  )}
                 {selectedRecord.diagnosis && (
                   <>
                     <Divider sx={{ my: 2, width: "100%" }} />

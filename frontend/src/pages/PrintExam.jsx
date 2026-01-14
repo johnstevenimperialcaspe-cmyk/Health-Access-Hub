@@ -52,7 +52,7 @@ const PrintExam = () => {
     load();
 
     return () => { mounted = false };
-  }, [id]);
+  }, [id, currentUser]);
 
   useEffect(() => {
     if (!loading && exam) {
@@ -63,8 +63,8 @@ const PrintExam = () => {
     }
   }, [loading, exam]);
 
-  if (loading) return <div style={{padding:20}}>Loading...</div>;
-  if (!exam) return <div style={{padding:20}}>Not found</div>;
+  if (loading) return <div style={{ padding: 20 }}>Loading...</div>;
+  if (!exam) return <div style={{ padding: 20 }}>Not found</div>;
 
   const notes = (() => {
     try { return typeof exam.notes === 'string' ? JSON.parse(exam.notes || '{}') : exam.notes || {}; } catch { return { physical: {}, medical: {} } }
@@ -83,7 +83,7 @@ const PrintExam = () => {
   const employeeId = exam.employee_id || exam.user_employee_id || '';
   const identifier = isStudent ? studentId : employeeId;
   const fullName = `${exam.first_name || ''} ${exam.last_name || ''}`.trim();
-  const role = exam.user_role || exam.role || '';
+  // const role = exam.user_role || exam.role || '';  // Unused for now
   const department = (profile && (profile.department || profile.dept)) || exam.department || exam.department_name || '';
   const position = (profile && profile.position) || exam.position || '';
   const course = isStudent ? ((profile && (profile.course || profile.program)) || exam.course || '') : '';
@@ -105,13 +105,13 @@ const PrintExam = () => {
 
         {/* Header info per user type */}
         <div className="row">
-          <div style={{flexBasis: '50%'}}>
+          <div style={{ flexBasis: '50%' }}>
             <div><span className="label">{isStudent ? 'Student ID' : 'Employee ID'}:</span> {identifier}</div>
             <div><span className="label">Name:</span> {fullName}</div>
             <div><span className="label">Address:</span> {address}</div>
             <div><span className="label">Birthday:</span> {birthday ? new Date(birthday).toLocaleDateString() : ''}</div>
           </div>
-          <div style={{flexBasis: '45%'}}>
+          <div style={{ flexBasis: '45%' }}>
             {isStudent ? (
               <>
                 <div><span className="label">Course & Program:</span> {course}</div>
@@ -128,27 +128,27 @@ const PrintExam = () => {
           </div>
         </div>
 
-        <h1 style={{textAlign:'center', marginTop:18}}>PHYSICAL EXAMINATION</h1>
+        <h1 style={{ textAlign: 'center', marginTop: 18 }}>PHYSICAL EXAMINATION</h1>
         <div className="section">
           <div className="vital">
             <div className="vital-item"><span className="label">Height:</span> {physical.height || ''} cm</div>
             <div className="vital-item"><span className="label">Weight (kg):</span> {physical.weight || ''} kg</div>
             <div className="vital-item"><span className="label">Blood Pressure:</span> {physical.bloodPressure || ''}</div>
           </div>
-          <div className="vital" style={{marginTop:8}}>
+          <div className="vital" style={{ marginTop: 8 }}>
             <div className="vital-item"><span className="label">Heart Rate:</span> {physical.heartRate || ''} bpm</div>
             <div className="vital-item"><span className="label">Respiratory Rate:</span> {physical.respiratoryRate || exam.vital_respiratory_rate || ''} breaths/min</div>
             <div className="vital-item"><span className="label">Temperature:</span> {physical.temperature || ''} °C</div>
           </div>
         </div>
 
-        <h1 style={{textAlign:'center', marginTop:18}}>MEDICAL EXAMINATION</h1>
+        <h1 style={{ textAlign: 'center', marginTop: 18 }}>MEDICAL EXAMINATION</h1>
         <div className="section">
           <div>
             <div className="label">Findings:</div>
             <div className="notes">{medical.findings || ''}</div>
           </div>
-          <div style={{marginTop:12}}>
+          <div style={{ marginTop: 12 }}>
             <div className="label">Recommendation:</div>
             <div className="notes">{medical.recommendation || ''}</div>
           </div>
