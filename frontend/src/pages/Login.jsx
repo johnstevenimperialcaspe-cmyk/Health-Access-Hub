@@ -32,7 +32,6 @@ const Login = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,18 +50,18 @@ const Login = () => {
     try {
       const role = await login(email, password); // This will throw on error
       console.log("🔐 Login successful. Returned role:", role);
-      
+
       const map = {
         admin: "/admin",
         faculty: "/faculty",
         student: "/student",
         non_academic: "/non-academic",
       };
-      
+
       const redirectPath = map[role] || "/login";
       console.log("📍 Redirecting to:", redirectPath, "for role:", role);
       console.log("🗺️  Available routes in map:", Object.keys(map));
-      
+
       navigate(redirectPath);
     } catch (err) {
       // Error already toasted in AuthContext
@@ -91,13 +90,13 @@ const Login = () => {
                 <img
                   src={logo}
                   alt="EARIST Logo"
-                  style={{ 
-                    height: isMobile ? 35 : 50, 
-                    marginRight: isMobile ? 8 : 16 
+                  style={{
+                    height: isMobile ? 35 : 50,
+                    marginRight: isMobile ? 8 : 16
                   }}
                 />
-                <Typography 
-                  variant={isMobile ? "subtitle1" : "h5"} 
+                <Typography
+                  variant={isMobile ? "subtitle1" : "h5"}
                   sx={{ fontWeight: "bold" }}
                 >
                   {isMobile ? "EARIST Hub" : "EARIST Health Access Hub"}
@@ -109,12 +108,12 @@ const Login = () => {
       </AppBar>
 
       {/* Full-screen Background with blurred cover image */}
-      <Box sx={{ 
-        position: "relative", 
+      <Box sx={{
+        position: "relative",
         height: { xs: "calc(100vh - 60px)", sm: "100vh" },
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center" 
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
       }}>
         {/* Background image layer (blurred, 50% opacity) */}
         <Box
@@ -142,12 +141,12 @@ const Login = () => {
           }}
         />
 
-        <Container 
-          maxWidth="sm" 
-          sx={{ 
-            position: "relative", 
-            zIndex: 2, 
-            p: { xs: 1, sm: 2 } 
+        <Container
+          maxWidth="sm"
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            p: { xs: 1, sm: 2 }
           }}
         >
           {/* Login Card */}
@@ -169,15 +168,15 @@ const Login = () => {
           >
             {/* Card Title */}
             <Box textAlign="center" mb={{ xs: 2.5, sm: 4 }}>
-              <Typography 
-                variant={isMobile ? "h6" : "h5"} 
-                fontWeight="bold" 
+              <Typography
+                variant={isMobile ? "h6" : "h5"}
+                fontWeight="bold"
                 gutterBottom
               >
                 Sign In
               </Typography>
-              <Typography 
-                variant={isMobile ? "caption" : "body2"} 
+              <Typography
+                variant={isMobile ? "caption" : "body2"}
                 color="text.secondary"
               >
                 Enter your credentials to continue
@@ -186,10 +185,10 @@ const Login = () => {
 
             {/* Error Alert */}
             {error && (
-              <Alert 
-                severity="error" 
-                sx={{ 
-                  mb: { xs: 2, sm: 3 }, 
+              <Alert
+                severity="error"
+                sx={{
+                  mb: { xs: 2, sm: 3 },
                   borderRadius: 2,
                   fontSize: { xs: '0.8rem', sm: '0.875rem' }
                 }}
@@ -274,15 +273,15 @@ const Login = () => {
               </Button>
 
               <Box textAlign="center" mt={{ xs: 1.5, sm: 2 }}>
-                <Typography 
-                  variant={isMobile ? "caption" : "body2"} 
+                <Typography
+                  variant={isMobile ? "caption" : "body2"}
                   color="text.secondary"
                 >
                   Don't have an account?{" "}
                   <Button
                     onClick={() => navigate("/register")}
-                    sx={{ 
-                      textTransform: "none", 
+                    sx={{
+                      textTransform: "none",
                       fontWeight: 600,
                       fontSize: { xs: '0.75rem', sm: '0.875rem' }
                     }}

@@ -11,13 +11,11 @@ import {
   Chip,
   Paper,
   Button,
-  Tooltip,
 } from "@mui/material";
 import { Button as AntButton } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 
 const Notifications = ({ notifications = [], onMarkAsRead, onMarkAllAsRead }) => {
@@ -80,7 +78,7 @@ const Notifications = ({ notifications = [], onMarkAsRead, onMarkAllAsRead }) =>
                           icon={<CheckOutlined />}
                           onClick={() => onMarkAsRead && onMarkAsRead(notif.id)}
                         >
-                          
+
                         </AntButton>
                       )
                     }

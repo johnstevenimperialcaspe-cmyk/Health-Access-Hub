@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Form, Button, Rate, Input, Switch, message } from "antd";
 import {
-  StarFilled,
   HeartOutlined,
 } from "@ant-design/icons";
 import api from "../utils/axios";
@@ -18,7 +17,7 @@ const EvaluationForm = ({ visible, onClose, visitData, onSuccess }) => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -68,7 +67,7 @@ const EvaluationForm = ({ visible, onClose, visitData, onSuccess }) => {
       width={isMobile ? "100%" : 650}
       style={isMobile ? { top: 0, paddingBottom: 0, maxWidth: "100vw" } : {}}
       styles={{
-        body: isMobile ? { 
+        body: isMobile ? {
           padding: "16px 12px",
           maxHeight: "calc(100vh - 110px)",
           overflowY: "auto"
@@ -77,11 +76,11 @@ const EvaluationForm = ({ visible, onClose, visitData, onSuccess }) => {
       destroyOnHidden
       centered={!isMobile}
     >
-      <div style={{ 
-        marginBottom: isMobile ? 12 : 16, 
-        padding: isMobile ? "10px 12px" : "12px 16px", 
-        background: "#f0f5ff", 
-        borderRadius: 8 
+      <div style={{
+        marginBottom: isMobile ? 12 : 16,
+        padding: isMobile ? "10px 12px" : "12px 16px",
+        background: "#f0f5ff",
+        borderRadius: 8
       }}>
         <p style={{ margin: 0, color: "#1890ff", fontSize: isMobile ? 13 : 14 }}>
           <strong>Your feedback helps us improve our service!</strong>
@@ -160,7 +159,7 @@ const EvaluationForm = ({ visible, onClose, visitData, onSuccess }) => {
         </Form.Item>
 
         {/* Comments */}
-        <Form.Item 
+        <Form.Item
           label={
             <span style={{ fontSize: isMobile ? 13 : 14 }}>
               Comments (Optional)
@@ -179,7 +178,7 @@ const EvaluationForm = ({ visible, onClose, visitData, onSuccess }) => {
         </Form.Item>
 
         {/* Suggestions */}
-        <Form.Item 
+        <Form.Item
           label={
             <span style={{ fontSize: isMobile ? 13 : 14 }}>
               Suggestions for Improvement (Optional)
@@ -217,22 +216,22 @@ const EvaluationForm = ({ visible, onClose, visitData, onSuccess }) => {
 
         {/* Submit Buttons */}
         <Form.Item style={{ marginBottom: 0, marginTop: isMobile ? 16 : 24 }}>
-          <div style={{ 
-            display: "flex", 
-            gap: 8, 
+          <div style={{
+            display: "flex",
+            gap: 8,
             justifyContent: "flex-end",
             flexDirection: isMobile ? "column-reverse" : "row"
           }}>
-            <Button 
+            <Button
               onClick={onClose}
               block={isMobile}
               size={isMobile ? "large" : "middle"}
             >
               Cancel
             </Button>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
+            <Button
+              type="primary"
+              htmlType="submit"
               loading={loading}
               block={isMobile}
               size={isMobile ? "large" : "middle"}

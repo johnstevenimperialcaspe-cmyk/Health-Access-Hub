@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
-import axios from "axios";
 import api from "../../utils/axios";
 
 import Navbar from "../../components/Navbar";
@@ -35,12 +34,10 @@ import {
   Divider,
   Typography,
   Alert,
-  CircularProgress,
 } from "@mui/material";
 import BadgeIcon from "@mui/icons-material/Badge";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import EventNoteIcon from "@mui/icons-material/EventNote";
 import NotesIcon from "@mui/icons-material/Notes";
 import InfoIcon from "@mui/icons-material/Info";
 
@@ -48,8 +45,6 @@ import {
   getAvailableSlotsForDate,
   validateAppointmentTime,
   getMinimumAllowedDate,
-  isWeekday,
-  isWithinOperatingHours,
 } from "../../utils/appointmentSlotHelper";
 
 // AUTH GUARD
@@ -115,7 +110,7 @@ const Student = () => {
   const [modalType, setModalType] = useState("");
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({});
-  
+
   // 5b. Evaluation modal state
   const [evaluationModalVisible, setEvaluationModalVisible] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -178,7 +173,7 @@ const Student = () => {
 
     setDashboardData({
       totalRecords: healthRecords.length,
-      ongoingTreatment: healthRecords.filter((r) => 
+      ongoingTreatment: healthRecords.filter((r) =>
         r.chief_complaint === "Physical/Medical Examination" || r.diagnosis
       ).length,
       unreadNotifications: notifications.filter((n) => !n.isRead).length,
@@ -252,7 +247,7 @@ const Student = () => {
 
   const handleAppointmentSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Check for validation errors
     if (timeValidationErrors.length > 0) {
       toast.error("Please fix appointment scheduling errors: " + timeValidationErrors[0]);
@@ -384,9 +379,9 @@ const Student = () => {
 
   // RENDER
   return (
-    <Box sx={{ 
-      display: "flex", 
-      flexDirection: "column", 
+    <Box sx={{
+      display: "flex",
+      flexDirection: "column",
       minHeight: "100vh",
       overflow: "hidden",
       width: "100%"
@@ -395,8 +390,8 @@ const Student = () => {
       <Navbar onMenuClick={handleDrawerToggle} />
 
       {/* SIDEBAR + CONTENT */}
-      <Box sx={{ 
-        display: "flex", 
+      <Box sx={{
+        display: "flex",
         flex: 1,
         overflow: "hidden",
         width: "100%"
@@ -409,18 +404,18 @@ const Student = () => {
           onMobileClose={handleDrawerToggle}
         />
 
-        <Box 
-          component="main" 
-          sx={{ 
-            flexGrow: 1, 
-            p: { xs: 1, sm: 2, md: 3 }, 
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: { xs: 1, sm: 2, md: 3 },
             bgcolor: "#f5f5f5",
             overflow: "auto",
             width: { xs: "100%", md: "calc(100% - 250px)" },
             maxWidth: "100%"
           }}
         >
-          <Container 
+          <Container
             maxWidth="lg"
             sx={{
               width: "100%",

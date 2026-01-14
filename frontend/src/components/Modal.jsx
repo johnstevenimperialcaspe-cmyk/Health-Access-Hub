@@ -4,12 +4,10 @@ import {
   Box,
   Typography,
   IconButton,
-  useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Modal = ({ isOpen, onClose, title, children }) => {
-  const theme = useTheme();
 
   return (
     <MuiModal

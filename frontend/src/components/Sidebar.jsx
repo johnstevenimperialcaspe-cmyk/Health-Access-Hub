@@ -15,7 +15,6 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import NotesIcon from "@mui/icons-material/Notes";
 import StethoscopeIcon from "@mui/icons-material/LocalHospital";
 import SchoolIcon from "@mui/icons-material/School";
 import PeopleIcon from "@mui/icons-material/People";
@@ -187,8 +186,8 @@ const Sidebar = ({ role, currentSection, onSectionChange, mobileOpen, onMobileCl
               >
                 {item.icon}
               </ListItemIcon>
-              <ListItemText 
-                primary={item.label} 
+              <ListItemText
+                primary={item.label}
                 primaryTypographyProps={{
                   fontSize: isMobile ? '0.9rem' : '1rem'
                 }}
@@ -212,8 +211,8 @@ const Sidebar = ({ role, currentSection, onSectionChange, mobileOpen, onMobileCl
         }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { 
-            boxSizing: 'border-box', 
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
             width: 250,
             boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
           },
