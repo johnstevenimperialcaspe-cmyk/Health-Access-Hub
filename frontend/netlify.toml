@@ -1,7 +1,9 @@
 [build]
+  # Base directory - where to run the build command
+  base = "frontend"
   # Build command
   command = "npm run build"
-  # Output directory
+  # Output directory (relative to base)
   publish = "build"
 
 # Redirect all routes to index.html for React Router
