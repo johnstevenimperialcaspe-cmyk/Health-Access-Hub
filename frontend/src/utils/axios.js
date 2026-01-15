@@ -6,11 +6,25 @@ import axios from "axios";
 const isExternalAccess = !window.location.hostname.includes('localhost') && 
                         !window.location.hostname.includes('127.0.0.1');
 
-// If accessing from external device, use the same host but port 5000
-// Otherwise, use empty baseURL and let proxy handle it
-const baseURL = isExternalAccess 
-  ? `http://${window.location.hostname}:5000`
-  : "";
+// Detect if we're in GitHub Codespaces
+const isCodespaces = window.location.hostname.includes('app.github.dev') || 
+                     window.location.hostname.includes('github.dev');
+
+// Determine the base URL for API calls
+let baseURL = "";
+
+// IMPORTANT: In Codespaces, use empty baseURL to leverage the proxy
+// This avoids CORS issues by routing through the same origin (port 3000)
+if (isCodespaces) {
+  // Use the proxy - all /api calls will be forwarded to localhost:5000
+  baseURL = "";
+  console.log("🔧 Using proxy for API calls (Codespaces mode)");
+} else if (isExternalAccess) {
+  // If accessing from external device (same network), use the same protocol and host but port 5000
+  const protocol = window.location.protocol;
+  baseURL = `${protocol}//${window.location.hostname}:5000`;
+}
+// Otherwise, use empty baseURL and let proxy handle it (for localhost)
 
 // Create axios instance with base configuration
 const api = axios.create({

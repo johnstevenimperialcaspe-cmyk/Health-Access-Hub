@@ -30,18 +30,40 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Trust proxy - needed for Codespaces and rate limiting
+app.set('trust proxy', 1);
+
 /* -------------------- Middleware -------------------- */
 // IMPORTANT: Body parser MUST come before routes
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// CORS - allow all origins in development
+// CORS - Dynamic origin handling for development and production
 app.use(
   cors({
-    origin: "*", // Allow all origins in development
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+      
+      // Allow all localhost origins
+      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+      
+      // Allow GitHub Codespaces origins
+      if (origin.includes('app.github.dev') || origin.includes('github.dev')) {
+        return callback(null, true);
+      }
+      
+      // Allow any origin in development (fallback)
+      return callback(null, true);
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    exposedHeaders: ["Authorization"],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   })
 );
 

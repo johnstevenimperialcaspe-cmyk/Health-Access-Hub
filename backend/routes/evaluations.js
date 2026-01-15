@@ -39,6 +39,9 @@ router.post("/", auth, async (req, res) => {
     // Calculate overall rating
     const ratingOverall = (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2);
 
+    // Convert visitDate to MySQL DATE format (YYYY-MM-DD)
+    const formattedVisitDate = visitDate ? new Date(visitDate).toISOString().split('T')[0] : null;
+
     await connection.beginTransaction();
 
     const [result] = await connection.execute(
@@ -53,7 +56,7 @@ router.post("/", auth, async (req, res) => {
         req.user.role,
         appointmentId || null,
         healthRecordId || null,
-        visitDate,
+        formattedVisitDate,
         ratingStaffCourtesy,
         ratingWaitingTime,
         ratingFacilityCleanliness,

@@ -271,25 +271,6 @@ const Login = () => {
               >
                 Sign In
               </Button>
-
-              <Box textAlign="center" mt={{ xs: 1.5, sm: 2 }}>
-                <Typography
-                  variant={isMobile ? "caption" : "body2"}
-                  color="text.secondary"
-                >
-                  Don't have an account?{" "}
-                  <Button
-                    onClick={() => navigate("/register")}
-                    sx={{
-                      textTransform: "none",
-                      fontWeight: 600,
-                      fontSize: { xs: '0.75rem', sm: '0.875rem' }
-                    }}
-                  >
-                    Register here
-                  </Button>
-                </Typography>
-              </Box>
             </Box>
 
             {/* Footer */}
