@@ -230,7 +230,7 @@ router.post(
         [updated, id]
       );
 
-      logAction({
+      await logAction({
         actorId: req.user.id,
         action: "UPLOAD",
         targetModel: "HealthRecord",
@@ -313,7 +313,7 @@ router.post(
         ]
       );
 
-      logAction({
+      await logAction({
         actorId: req.user.id,
         action: "CREATE",
         targetModel: "HealthRecord",
@@ -413,7 +413,7 @@ router.put(
         values
       );
 
-      logAction({
+      await logAction({
         actorId: req.user.id,
         action: "UPDATE",
         targetModel: "HealthRecord",
@@ -473,7 +473,7 @@ router.delete(
 
       await pool.query("DELETE FROM health_records WHERE id = ?", [id]);
 
-      logAction({
+      await logAction({
         actorId: req.user.id,
         action: "DELETE",
         targetModel: "HealthRecord",
