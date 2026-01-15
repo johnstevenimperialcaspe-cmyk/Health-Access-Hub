@@ -37,8 +37,18 @@ export async function logAction({
         details || null
       ]
     );
+    
+    console.log("✅ Audit logged:", { action, targetModel, targetId, actorId, summary });
   } catch (e) {
     // Do not throw – audit failure must not break the primary flow
-    console.error("Audit log failed", e.message);
+    console.error("❌ AUDIT LOG FAILED:", {
+      error: e.message,
+      stack: e.stack,
+      actorId,
+      action,
+      targetModel,
+      targetId,
+      summary
+    });
   }
 }
