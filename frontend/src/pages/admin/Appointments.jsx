@@ -430,12 +430,12 @@ const Appointments = ({ appointments = [], onDelete, onStatusUpdate }) => {
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel>Status</InputLabel>
             <Select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} label="Status">
-              <MenuItem value="pending">Pending</MenuItem>
               <MenuItem value="scheduled">Scheduled</MenuItem>
               <MenuItem value="confirmed">Confirmed</MenuItem>
               <MenuItem value="in_progress">In Progress</MenuItem>
-
+              <MenuItem value="completed">Completed</MenuItem>
               <MenuItem value="cancelled">Cancelled</MenuItem>
+              <MenuItem value="no_show">No Show</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>
