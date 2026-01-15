@@ -3,6 +3,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { pool } from "../db/mysql.js";
+import { logAction } from "../utils/audit.js";
 
 const router = express.Router();
 
@@ -270,6 +271,16 @@ router.post("/register", async (req, res) => {
       is_active: user.is_active,
     };
 
+    // Log registration action
+    await logAction({
+      actorId: user.id,
+      action: "CREATE",
+      targetModel: "User",
+      targetId: user.id.toString(),
+      summary: `User registered: ${user.first_name} ${user.last_name} (${user.role})`,
+      ipAddress: req.ip,
+    });
+
     return res.status(201).json({ message: "Registration successful", token, user: profile });
   } catch (err) {
     console.error("[REGISTER] Registration error:", err);
@@ -483,7 +494,15 @@ router.post("/login", async (req, res) => {
     console.log(`[LOGIN] 🎭 Role: ${profile.role}`);
     console.log(`[LOGIN] 📦 Returning profile with role: ${profile.role}`);
     console.log(`${"=".repeat(60)}\n`);
-
+    // Log login action
+    await logAction({
+      actorId: user.id,
+      action: "LOGIN",
+      targetModel: "User",
+      targetId: user.id.toString(),
+      summary: `User logged in: ${profile.first_name} ${profile.last_name}`,
+      ipAddress: req.ip,
+    });
     return res.json({ 
       token, 
       user: profile 

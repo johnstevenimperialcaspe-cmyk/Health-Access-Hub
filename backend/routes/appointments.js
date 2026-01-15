@@ -302,7 +302,7 @@ router.post("/", auth, async (req, res) => {
       [req.user.id, appointment_date, appointment_time, purpose, duration || 30, notes || null]
     );
 
-    logAction({
+    await logAction({
       actorId: req.user.id,
       action: "CREATE",
       targetModel: "Appointment",
@@ -533,7 +533,7 @@ router.put("/:id", auth, async (req, res) => {
       values
     );
 
-    logAction({
+    await logAction({
       actorId: req.user.id,
       action: "UPDATE",
       targetModel: "Appointment",
@@ -597,7 +597,7 @@ router.delete("/:id", auth, async (req, res) => {
 
     await pool.query("DELETE FROM appointments WHERE id = ?", [apptId]);
 
-    logAction({
+    await logAction({
       actorId: req.user.id,
       action: "DELETE",
       targetModel: "Appointment",
