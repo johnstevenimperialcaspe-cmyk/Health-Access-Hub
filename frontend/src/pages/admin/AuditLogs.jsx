@@ -169,6 +169,8 @@ const AuditLogs = () => {
       title: "Summary",
       dataIndex: "summary",
       key: "summary",
+      width: 300,
+      ellipsis: true,
       render: (summary) => (
         <span style={{ fontSize: 13 }}>{summary || "—"}</span>
       ),
@@ -338,7 +340,7 @@ const AuditLogs = () => {
               locale={{
                 emptyText: <Empty description="No activity logs found" />,
               }}
-              scroll={{ x: 1200 }}
+              scroll={{ x: 1000 }}
             />
           </TabPane>
 
