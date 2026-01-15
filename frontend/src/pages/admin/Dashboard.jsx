@@ -65,11 +65,6 @@ const Dashboard = ({ data = {}, notifications = [], onViewNotifications, onSecti
         >
           Dashboard
         </Typography>
-        {unreadNotifications > 0 && (
-          <Badge badgeContent={unreadNotifications} color="error">
-            <NotificationIcon sx={{ fontSize: { xs: 24, md: 32 } }} />
-          </Badge>
-        )}
       </Box>
 
       {/* Alert for New Appointments */}
