@@ -208,7 +208,7 @@ router.get("/user/:userId", auth, authorize("admin"), async (req, res) => {
 router.get("/my-activity", auth, async (req, res) => {
   try {
     const { limit = 50, page = 1 } = req.query;
-    const userId = req.user.userId;
+    const userId = req.user.id;
     const offset = (parseInt(page) - 1) * parseInt(limit);
 
     const [logs] = await pool.query(
