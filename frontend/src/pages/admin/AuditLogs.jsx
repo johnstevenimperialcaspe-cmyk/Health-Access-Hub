@@ -174,17 +174,6 @@ const AuditLogs = () => {
       ),
     },
     {
-      title: "Details",
-      dataIndex: "details",
-      key: "details",
-      width: 200,
-      render: (details) => (
-        <span style={{ fontSize: 12, color: "#666" }}>
-          {details || "—"}
-        </span>
-      ),
-    },
-    {
       title: "IP Address",
       dataIndex: "ip_address",
       key: "ip_address",
