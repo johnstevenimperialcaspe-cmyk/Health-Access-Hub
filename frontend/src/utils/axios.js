@@ -10,12 +10,20 @@ const isExternalAccess = !window.location.hostname.includes('localhost') &&
 const isCodespaces = window.location.hostname.includes('app.github.dev') || 
                      window.location.hostname.includes('github.dev');
 
+// Production API URL from environment variable
+const PRODUCTION_API_URL = process.env.REACT_APP_API_URL || '';
+
 // Determine the base URL for API calls
 let baseURL = "";
 
+// Check if we're in production mode (Railway, Vercel, etc.)
+if (process.env.NODE_ENV === 'production' && PRODUCTION_API_URL) {
+  baseURL = PRODUCTION_API_URL;
+  console.log("🚀 Production mode - API:", baseURL);
+}
 // IMPORTANT: In Codespaces, use empty baseURL to leverage the proxy
 // This avoids CORS issues by routing through the same origin (port 3000)
-if (isCodespaces) {
+else if (isCodespaces) {
   // Use the proxy - all /api calls will be forwarded to localhost:5000
   baseURL = "";
   console.log("🔧 Using proxy for API calls (Codespaces mode)");
