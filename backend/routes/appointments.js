@@ -533,7 +533,7 @@ router.put("/:id", auth, async (req, res) => {
       values
     );
 
-    logAction({
+    await logAction({
       actorId: req.user.id,
       action: "UPDATE",
       targetModel: "Appointment",
