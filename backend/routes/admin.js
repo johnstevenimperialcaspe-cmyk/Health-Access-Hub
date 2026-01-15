@@ -202,7 +202,7 @@ router.post(
         values
       );
 
-      await logAction({
+      logAction({
         actorId: req.user.id,
         action: "CREATE",
         targetModel: "User",

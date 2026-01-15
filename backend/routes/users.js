@@ -118,7 +118,7 @@ router.put("/profile", auth, async (req, res) => {
       return res.status(404).json({ message: "Profile not found" });
 
     // Log action
-    await logAction({
+    logAction({
       actorId: req.user.id,
       action: "UPDATE",
       targetModel: "User",
@@ -186,7 +186,7 @@ router.put("/change-password", auth, async (req, res) => {
       req.user.id,
     ]);
 
-    await logAction({
+    logAction({
       actorId: req.user.id,
       action: "PASSWORD_CHANGE",
       targetModel: "User",
@@ -524,7 +524,7 @@ router.put("/:id", auth, authorize("admin"), async (req, res) => {
     if (!result.affectedRows)
       return res.status(404).json({ message: "User not found" });
 
-    await logAction({
+    logAction({
       actorId: req.user.id,
       action: "UPDATE",
       targetModel: "User",
@@ -572,7 +572,7 @@ router.delete("/:id", auth, authorize("admin"), async (req, res) => {
     if (!result.affectedRows)
       return res.status(404).json({ message: "User not found" });
 
-    await logAction({
+    logAction({
       actorId: req.user.id,
       action: "DELETE",
       targetModel: "User",
@@ -618,7 +618,7 @@ router.put("/:id/deactivate", auth, authorize("admin"), async (req, res) => {
     if (!result.affectedRows)
       return res.status(404).json({ message: "User not found" });
 
-    await logAction({
+    logAction({
       actorId: req.user.id,
       action: "DEACTIVATE",
       targetModel: "User",
@@ -663,7 +663,7 @@ router.put("/:id/activate", auth, authorize("admin"), async (req, res) => {
     );
     if (!result.affectedRows)
       return res.status(404).json({ message: "User not found" });
-    await logAction({
+    logAction({
       actorId: req.user.id,
       action: "ACTIVATE",
       targetModel: "User",

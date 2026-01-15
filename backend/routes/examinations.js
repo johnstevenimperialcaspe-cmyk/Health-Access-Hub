@@ -113,7 +113,7 @@ router.post(
         ]
       );
 
-      await logAction({
+      logAction({
         actorId: req.user.id,
         action: "CREATE",
         targetModel: "HealthRecord",
@@ -315,7 +315,7 @@ router.put(
         ]
       );
 
-      await logAction({
+      logAction({
         actorId: req.user.id,
         action: "UPDATE",
         targetModel: "HealthRecord",
@@ -392,7 +392,7 @@ router.delete(
       );
       if (!result.affectedRows)
         return res.status(400).json({ message: "Failed to delete" });
-      await logAction({
+      logAction({
         actorId: req.user.id,
         action: "DELETE",
         targetModel: "HealthRecord",
@@ -455,7 +455,7 @@ router.post(
       );
       if (!result.affectedRows)
         return res.status(400).json({ message: "Failed to delete" });
-      await logAction({
+      logAction({
         actorId: req.user.id,
         action: "DELETE",
         targetModel: "HealthRecord",

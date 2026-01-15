@@ -39,7 +39,7 @@ router.post("/", auth, authorize("admin"), async (req, res) => {
       [userRow.id, date, req.user.id, purpose, JSON.stringify(notesObj)]
     );
 
-    await logAction({
+    logAction({
       actorId: req.user.id,
       action: "CREATE",
       targetModel: "HealthRecord",
