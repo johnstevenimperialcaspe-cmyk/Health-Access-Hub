@@ -111,6 +111,12 @@ const Evaluations = () => {
       },
     },
     {
+      title: "Appointment ID",
+      dataIndex: "appointment_id",
+      key: "appointment_id",
+      render: (id) => id ? `#${id}` : <span style={{ color: "#999" }}>-</span>,
+    },
+    {
       title: "Visit Date",
       dataIndex: "visit_date",
       key: "visit_date",
