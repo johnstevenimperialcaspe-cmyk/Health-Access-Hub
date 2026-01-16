@@ -100,7 +100,7 @@ router.post("/", auth, async (req, res) => {
 // ==========================================
 router.get("/", auth, authorize("admin"), async (req, res) => {
   try {
-    const { patientType, startDate, endDate, minRating, source, page = 1, limit = 50 } = req.query;
+    const { patientType, startDate, endDate, minRating, page = 1, limit = 50 } = req.query;
     
     let whereConditions = [];
     let params = [];
@@ -125,12 +125,6 @@ router.get("/", auth, authorize("admin"), async (req, res) => {
       params.push(parseFloat(minRating));
     }
 
-    if (source === 'appointment') {
-      whereConditions.push('se.appointment_id IS NOT NULL');
-    } else if (source === 'logbook') {
-      whereConditions.push('se.health_record_id IS NOT NULL');
-    }
-
     const whereClause = whereConditions.length > 0 
       ? 'WHERE ' + whereConditions.join(' AND ')
       : '';
@@ -148,19 +142,9 @@ router.get("/", auth, authorize("admin"), async (req, res) => {
         u.employee_id,
         u.department,
         u.course,
-        u.position,
-        a.id as appointment_number,
-        a.appointment_date,
-        a.appointment_time,
-        a.purpose as appointment_purpose,
-        CASE 
-          WHEN se.appointment_id IS NOT NULL THEN 'appointment'
-          WHEN se.health_record_id IS NOT NULL THEN 'logbook'
-          ELSE 'other'
-        END as evaluation_source
+        u.position
       FROM service_evaluations se
       JOIN users u ON se.patient_id = u.id
-      LEFT JOIN appointments a ON se.appointment_id = a.id
       ${whereClause}
       ORDER BY se.submitted_at DESC
       LIMIT ? OFFSET ?`,
