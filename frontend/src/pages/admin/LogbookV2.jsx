@@ -48,32 +48,22 @@ const LogbookV2 = () => {
   const [checkOutForm] = Form.useForm();
   const [editForm] = Form.useForm();
 
-  // Filters state
-  const [filters, setFilters] = useState({
-    patientType: null,
-    status: null,
-    dateRange: null,
-  });
-
   useEffect(() => {
     fetchData();
     fetchUsers();
-  }, [filters]);
+  }, []);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const params = {
-        startDate: filters.dateRange ? filters.dateRange[0].format("YYYY-MM-DD") : moment().subtract(7, "days").format("YYYY-MM-DD"),
-        endDate: filters.dateRange ? filters.dateRange[1].format("YYYY-MM-DD") : moment().format("YYYY-MM-DD"),
-        patientType: filters.patientType,
-        status: filters.status,
-        page: 1,
-        limit: 100,
-      };
-
       const [entriesRes, statsRes] = await Promise.all([
-        api.get("/api/logbook-v2", { params }),
+        api.get("/api/logbook-v2", {
+          params: {
+            startDate: moment().subtract(7, "days").format("YYYY-MM-DD"),
+            page: 1,
+            limit: 100,
+          },
+        }),
         api.get("/api/logbook-v2/stats"),
       ]);
 
@@ -386,59 +376,6 @@ const LogbookV2 = () => {
           </Card>
         </Col>
       </Row>
-
-      {/* Filters */}
-      <Card 
-        style={{ marginBottom: 16 }}
-        title={<span style={{ fontSize: "14px" }}>Filters</span>}
-        styles={{ body: { padding: "16px" } }}
-      >
-        <Row gutter={[16, 16]}>
-          <Col xs={24} sm={12} md={6}>
-            <Select
-              placeholder="Filter by Patient Type"
-              style={{ width: "100%" }}
-              allowClear
-              value={filters.patientType}
-              onChange={(value) => setFilters({ ...filters, patientType: value })}
-            >
-              <Option value="student">Student</Option>
-              <Option value="faculty">Faculty</Option>
-              <Option value="non_academic">Non-Academic</Option>
-            </Select>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Select
-              placeholder="Filter by Status"
-              style={{ width: "100%" }}
-              allowClear
-              value={filters.status}
-              onChange={(value) => setFilters({ ...filters, status: value })}
-            >
-              <Option value="checked_in">Checked In</Option>
-              <Option value="in_progress">In Progress</Option>
-              <Option value="completed">Completed</Option>
-              <Option value="cancelled">Cancelled</Option>
-            </Select>
-          </Col>
-          <Col xs={24} sm={12} md={8}>
-            <DatePicker.RangePicker
-              style={{ width: "100%" }}
-              value={filters.dateRange}
-              onChange={(dates) => setFilters({ ...filters, dateRange: dates })}
-              format="YYYY-MM-DD"
-            />
-          </Col>
-          <Col xs={24} sm={12} md={4}>
-            <Button
-              block
-              onClick={() => setFilters({ patientType: null, status: null, dateRange: null })}
-            >
-              Clear Filters
-            </Button>
-          </Col>
-        </Row>
-      </Card>
 
       {/* Main Table */}
       <Card

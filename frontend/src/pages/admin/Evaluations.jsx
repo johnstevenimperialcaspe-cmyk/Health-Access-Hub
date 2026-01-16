@@ -38,6 +38,7 @@ const Evaluations = () => {
     patientType: null,
     dateRange: [moment().subtract(30, "days"), moment()],
     minRating: null,
+    source: null, // 'appointment' or 'logbook'
   });
 
   // Handle window resize
@@ -62,6 +63,7 @@ const Evaluations = () => {
         startDate: filters.dateRange?.[0]?.format("YYYY-MM-DD"),
         endDate: filters.dateRange?.[1]?.format("YYYY-MM-DD"),
         minRating: filters.minRating,
+        source: filters.source,
         limit: 100,
       };
 
@@ -111,10 +113,22 @@ const Evaluations = () => {
       },
     },
     {
-      title: "Appointment ID",
-      dataIndex: "appointment_id",
-      key: "appointment_id",
-      render: (id) => id ? `#${id}` : <span style={{ color: "#999" }}>-</span>,
+      title: "Source",
+      dataIndex: "evaluation_source",
+      key: "evaluation_source",
+      render: (source, record) => {
+        if (source === 'appointment' && record.appointment_number) {
+          return (
+            <div>
+              <Tag color="blue">Appointment</Tag>
+              <div style={{ fontSize: 11, color: "#666", marginTop: 4 }}>#{record.appointment_number}</div>
+            </div>
+          );
+        } else if (source === 'logbook') {
+          return <Tag color="green">Logbook</Tag>;
+        }
+        return <Tag color="default">Other</Tag>;
+      },
     },
     {
       title: "Visit Date",
@@ -378,7 +392,7 @@ const Evaluations = () => {
         title={<span style={{ fontSize: isMobile ? 14 : 16 }}>Filters</span>}
       >
         <Row gutter={[16, 16]}>
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={6}>
             <Select
               placeholder="Filter by Patient Type"
               style={{ width: "100%" }}
@@ -392,7 +406,20 @@ const Evaluations = () => {
               <Option value="non_academic">Non-Academic</Option>
             </Select>
           </Col>
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={6}>
+            <Select
+              placeholder="Filter by Source"
+              style={{ width: "100%" }}
+              allowClear
+              value={filters.source}
+              onChange={(value) => setFilters({ ...filters, source: value })}
+              size={isMobile ? "middle" : "large"}
+            >
+              <Option value="appointment">Appointment</Option>
+              <Option value="logbook">Logbook</Option>
+            </Select>
+          </Col>
+          <Col xs={24} sm={12} md={6}>
             <RangePicker
               style={{ width: "100%" }}
               value={filters.dateRange}
@@ -401,7 +428,7 @@ const Evaluations = () => {
               size={isMobile ? "middle" : "large"}
             />
           </Col>
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={6}>
             <Select
               placeholder="Minimum Rating"
               style={{ width: "100%" }}
