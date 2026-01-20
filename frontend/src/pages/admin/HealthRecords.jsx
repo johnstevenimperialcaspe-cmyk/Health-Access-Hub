@@ -28,6 +28,10 @@ import {
   useTheme,
   useMediaQuery,
   MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { Button as AntButton, Space } from "antd";
 import { PrinterOutlined, EditOutlined, FolderOpenOutlined } from "@ant-design/icons";
@@ -57,10 +61,17 @@ const HealthRecords = () => {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterPriority, setFilterPriority] = useState("");
   const [page, setPage] = useState(1);
+  const [showArchived, setShowArchived] = useState(false);
+  const [archivedRecords, setArchivedRecords] = useState([]);
   // Default sort: newest first by date
   const [order, setOrder] = useState("desc"); // "asc" | "desc"
   const [orderBy, setOrderBy] = useState("date_of_visit");
   const [records, setRecords] = useState([]);
+
+  /* --------------------------- Edit Modal State ------------------------- */
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingRecord, setEditingRecord] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
 
   /* --------------------------- Debounced Search -------------------------- */
   const [debouncedSearch, setDebouncedSearch] = useState(search);
@@ -100,8 +111,10 @@ const HealthRecords = () => {
       if (aVal > bVal) return order === "asc" ? 1 : -1;
       return 0;
     };
-    return [...records].sort(comparator);
-  }, [orderBy, order, records]);
+    // Use archived or active records based on toggle
+    const dataSource = showArchived ? archivedRecords : records;
+    return [...dataSource].sort(comparator);
+  }, [orderBy, order, records, archivedRecords, showArchived]);
 
   /* ------------------------------ Filtering ----------------------------- */
   const filtered = useMemo(() => {
@@ -165,24 +178,132 @@ const HealthRecords = () => {
   const handleArchive = async (id) => {
     if (!window.confirm("Are you sure you want to archive this record?")) return;
     try {
-      // Update the record to mark it as archived
+      // Find the record before archiving
+      const recordToArchive = records.find(r => r.id === id);
+      
+      // Archive the record
       await api.put(`/api/health-records/${id}/archive`);
+      
+      // Add to archived list and remove from active list
+      if (recordToArchive) {
+        setArchivedRecords(prev => [...prev, { ...recordToArchive, archived_at: new Date().toISOString() }]);
+        setRecords(prev => prev.filter(r => r.id !== id));
+      }
+      
       toast.success("Health record archived successfully");
-      await loadHealthRecords();
     } catch (err) {
       console.error("Failed to archive record", err);
       toast.error(err.response?.data?.message || "Failed to archive record");
     }
   };
 
-  const handleEdit = (record) => {
-    // Navigate to edit page or open edit modal
-    if (record.record_type === "examination") {
-      // For examination records, you might want to navigate to an edit page
-      alert("Edit functionality for examinations will be implemented soon.");
-    } else {
-      alert("Edit functionality for logbook visits will be implemented soon.");
+  const handleUnarchive = (id) => {
+    if (!window.confirm("Are you sure you want to restore this record?")) return;
+    
+    // Find the archived record
+    const recordToRestore = archivedRecords.find(r => r.id === id);
+    
+    if (recordToRestore) {
+      // Remove archived_at and restore to active records
+      const { archived_at, ...restoredRecord } = recordToRestore;
+      setRecords(prev => [...prev, restoredRecord]);
+      setArchivedRecords(prev => prev.filter(r => r.id !== id));
+      toast.success("Health record restored successfully");
     }
+  };
+
+  const handleEdit = (record) => {
+    setEditingRecord(record);
+    
+    // Parse notes if it's a JSON string
+    let parsedNotes = record.notes;
+    if (typeof record.notes === 'string') {
+      try {
+        parsedNotes = JSON.parse(record.notes);
+      } catch (e) {
+        parsedNotes = {};
+      }
+    }
+    
+    // Initialize form data based on record type
+    if (record.record_type === "examination") {
+      const physical = parsedNotes?.physical || {};
+      const medical = parsedNotes?.medical || {};
+      
+      setEditFormData({
+        date_of_visit: record.date_of_visit || "",
+        chief_complaint: record.chief_complaint || "",
+        diagnosis: medical.findings || record.diagnosis || "",
+        treatment: medical.recommendation || record.treatment || "",
+        vital_blood_pressure: physical.bloodPressure || record.vital_blood_pressure || "",
+        vital_heart_rate: physical.heartRate || record.vital_heart_rate || "",
+        vital_respiratory_rate: physical.respiratoryRate || record.vital_respiratory_rate || "",
+        vital_temperature: physical.temperature || record.vital_temperature || "",
+        vital_weight: physical.weight || record.vital_weight || "",
+        vital_height: physical.height || record.vital_height || "",
+      });
+    } else {
+      // Logbook visit
+      setEditFormData({
+        date_of_visit: record.date_of_visit || "",
+        chief_complaint: record.chief_complaint || "",
+        diagnosis: record.diagnosis || "",
+        treatment: record.treatment || "",
+      });
+    }
+    
+    setEditModalOpen(true);
+  };
+
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingRecord) return;
+    
+    try {
+      // Prepare update payload
+      const updates = { ...editFormData };
+      
+      // For examination records, rebuild the notes JSON structure
+      if (editingRecord.record_type === "examination") {
+        updates.notes = JSON.stringify({
+          physical: {
+            height: updates.vital_height,
+            weight: updates.vital_weight,
+            bloodPressure: updates.vital_blood_pressure,
+            heartRate: updates.vital_heart_rate,
+            respiratoryRate: updates.vital_respiratory_rate,
+            temperature: updates.vital_temperature,
+          },
+          medical: {
+            findings: updates.diagnosis,
+            recommendation: updates.treatment,
+          }
+        });
+      }
+      
+      await api.put(`/api/health-records/${editingRecord.id}`, updates);
+      toast.success("Health record updated successfully");
+      setEditModalOpen(false);
+      setEditingRecord(null);
+      setEditFormData({});
+      await loadHealthRecords();
+    } catch (err) {
+      console.error("Failed to update record", err);
+      toast.error(err.response?.data?.message || "Failed to update health record");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditModalOpen(false);
+    setEditingRecord(null);
+    setEditFormData({});
   };
 
   const handlePrint = (record) => {
@@ -223,7 +344,19 @@ const HealthRecords = () => {
           </Typography>
         </Box>
 
-        {/* Add Record removed — records are auto-populated from user submissions */}
+        {/* Archive Toggle Button */}
+        <Button
+          variant={showArchived ? "contained" : "outlined"}
+          color={showArchived ? "secondary" : "primary"}
+          onClick={() => {
+            setShowArchived(!showArchived);
+            setPage(1);
+          }}
+          startIcon={<FolderOpenOutlined />}
+          sx={{ minWidth: 150 }}
+        >
+          {showArchived ? `Archived (${archivedRecords.length})` : `View Archive (${archivedRecords.length})`}
+        </Button>
       </Box>
 
       {/* Stats removed - page focuses on Physical & Medical Examinations */}
@@ -387,21 +520,34 @@ const HealthRecords = () => {
                               Print
                             </AntButton>
                           )}
-                          <AntButton
-                            size="small"
-                            type="primary"
-                            icon={<EditOutlined />}
-                            onClick={() => handleEdit(row)}
-                          >
-                            Edit
-                          </AntButton>
-                          <AntButton
-                            size="small"
-                            icon={<FolderOpenOutlined />}
-                            onClick={() => handleArchive(row.id)}
-                          >
-                            Archive
-                          </AntButton>
+                          {!showArchived && (
+                            <>
+                              <AntButton
+                                size="small"
+                                type="primary"
+                                icon={<EditOutlined />}
+                                onClick={() => handleEdit(row)}
+                              >
+                                Edit
+                              </AntButton>
+                              <AntButton
+                                size="small"
+                                icon={<FolderOpenOutlined />}
+                                onClick={() => handleArchive(row.id)}
+                              >
+                                Archive
+                              </AntButton>
+                            </>
+                          )}
+                          {showArchived && (
+                            <AntButton
+                              size="small"
+                              type="primary"
+                              onClick={() => handleUnarchive(row.id)}
+                            >
+                              Restore
+                            </AntButton>
+                          )}
                         </Space>
                       </TableCell>
                     </TableRow>
@@ -425,6 +571,163 @@ const HealthRecords = () => {
           />
         </Box>
       </Paper>
+
+      {/* Edit Modal */}
+      <Dialog 
+        open={editModalOpen} 
+        onClose={handleCancelEdit}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          Edit Health Record
+          {editingRecord && (
+            <Typography variant="caption" display="block" color="text.secondary">
+              {editingRecord.record_type === "examination" ? "Physical & Medical Examination" : "Logbook Visit"}
+            </Typography>
+          )}
+        </DialogTitle>
+        <DialogContent dividers>
+          <Grid container spacing={2} sx={{ mt: 0.5 }}>
+            {/* Date of Visit */}
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Date of Visit"
+                name="date_of_visit"
+                type="date"
+                value={editFormData.date_of_visit || ""}
+                onChange={handleEditFormChange}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+
+            {/* Chief Complaint */}
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Chief Complaint"
+                name="chief_complaint"
+                value={editFormData.chief_complaint || ""}
+                onChange={handleEditFormChange}
+              />
+            </Grid>
+
+            {/* Examination-specific fields */}
+            {editingRecord?.record_type === "examination" && (
+              <>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" color="primary" sx={{ mb: 1 }}>
+                    Vital Signs
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Blood Pressure"
+                    name="vital_blood_pressure"
+                    value={editFormData.vital_blood_pressure || ""}
+                    onChange={handleEditFormChange}
+                    placeholder="e.g., 120/80"
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Heart Rate (bpm)"
+                    name="vital_heart_rate"
+                    type="number"
+                    value={editFormData.vital_heart_rate || ""}
+                    onChange={handleEditFormChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Respiratory Rate (breaths/min)"
+                    name="vital_respiratory_rate"
+                    type="number"
+                    value={editFormData.vital_respiratory_rate || ""}
+                    onChange={handleEditFormChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Temperature (°C)"
+                    name="vital_temperature"
+                    type="number"
+                    inputProps={{ step: "0.1" }}
+                    value={editFormData.vital_temperature || ""}
+                    onChange={handleEditFormChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Weight (kg)"
+                    name="vital_weight"
+                    type="number"
+                    inputProps={{ step: "0.01" }}
+                    value={editFormData.vital_weight || ""}
+                    onChange={handleEditFormChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Height (cm)"
+                    name="vital_height"
+                    type="number"
+                    inputProps={{ step: "0.01" }}
+                    value={editFormData.vital_height || ""}
+                    onChange={handleEditFormChange}
+                  />
+                </Grid>
+              </>
+            )}
+
+            {/* Diagnosis and Treatment */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                label={editingRecord?.record_type === "examination" ? "Findings" : "Diagnosis"}
+                name="diagnosis"
+                value={editFormData.diagnosis || ""}
+                onChange={handleEditFormChange}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                label={editingRecord?.record_type === "examination" ? "Recommendation" : "Treatment"}
+                name="treatment"
+                value={editFormData.treatment || ""}
+                onChange={handleEditFormChange}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelEdit} color="inherit">
+            Cancel
+          </Button>
+          <Button onClick={handleSaveEdit} variant="contained" color="primary">
+            Save Changes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

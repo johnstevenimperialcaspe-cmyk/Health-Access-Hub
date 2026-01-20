@@ -43,6 +43,20 @@ const NotificationBell = ({ onViewAll }) => {
       setUnreadCount(unread);
     } catch (err) {
       console.error("Error loading notifications:", err);
+      console.error("Error details:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+        config: {
+          url: err.config?.url,
+          baseURL: err.config?.baseURL,
+          method: err.config?.method
+        }
+      });
+      // Don't show error to user, just log it
+      // Set empty array to avoid crashes
+      setNotifications([]);
+      setUnreadCount(0);
     }
   };
 
