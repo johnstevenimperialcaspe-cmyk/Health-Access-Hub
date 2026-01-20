@@ -51,6 +51,7 @@ import Notifications from "./Notifications";
 import StudentsRecords from "./StudentsRecords";
 import FacultiesRecords from "./FacultiesRecords";
 import NonAcademicRecords from "./NonAcademicRecords";
+import PatientRecords from "./PatientRecords";
 import Examinations from "./Examinations";
 import PhysicalMedicalExam from "./PhysicalMedicalExam";
 import Users from "./Users";
@@ -350,6 +351,25 @@ const Admin = () => {
     }
   };
 
+  // Load all patient records (students, faculty, non-academic)
+  const loadPatientRecords = async () => {
+    setLoading(true);
+    try {
+      const [studentsRes, facultiesRes, nonAcademicRes] = await Promise.all([
+        api.get("/api/users?role=student"),
+        api.get("/api/users?role=faculty"),
+        api.get("/api/users?role=non_academic"),
+      ]);
+      setStudents(studentsRes.data.users || []);
+      setFaculties(facultiesRes.data.users || []);
+      setNonAcademic(nonAcademicRes.data.users || []);
+    } catch (err) {
+      toast.error("Failed to load patient records");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loadExaminations = async () => {
     setLoading(true);
     try {
@@ -392,6 +412,9 @@ const Admin = () => {
         break;
       case "users":
         loadUsers();
+        break;
+      case "patient-records":
+        loadPatientRecords();
         break;
       case "student-records":
         loadStudents();
@@ -609,7 +632,10 @@ const Admin = () => {
       width: "100%"
     }}>
       {/* Navbar – shows user name & logout button */}
-      <Navbar onMenuClick={handleDrawerToggle} />
+      <Navbar 
+        onMenuClick={handleDrawerToggle} 
+        onViewNotifications={() => handleSectionChange("notifications")}
+      />
 
       <Box sx={{ 
         display: "flex", 
@@ -714,6 +740,20 @@ const Admin = () => {
                 onAdd={() => openModal("notifications")}
                 onEdit={(id, data) => openModal("notifications", id, data)}
                 onDelete={(id) => handleDelete("notifications", id)}
+              />
+            )}
+            {currentSection === "patient-records" && (
+              <PatientRecords
+                students={students}
+                faculties={faculties}
+                nonAcademic={nonAcademic}
+                onEdit={(roleType, id, data) => {
+                  // roleType is "student", "faculty", or "non_academic"
+                  openModal("users", id, data);
+                }}
+                onDelete={(roleType, id) => {
+                  handleDelete("users", id);
+                }}
               />
             )}
             {currentSection === "student-records" && (

@@ -16,8 +16,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
 import Modal from "./Modal";
+import NotificationBell from "./NotificationBell";
 
-const Navbar = ({ onMenuClick }) => {
+const Navbar = ({ onMenuClick, onViewNotifications }) => {
   const { currentUser, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
@@ -134,6 +135,9 @@ const Navbar = ({ onMenuClick }) => {
                     {formatRole(currentUser.role)}
                   </Typography>
                 </Box>
+
+                {/* Notification Bell */}
+                <NotificationBell onViewAll={onViewNotifications} />
 
                 <Button
                   color="inherit"

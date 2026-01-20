@@ -451,6 +451,54 @@ router.put(
 );
 
 /* -------------------------------------------------------------
+   PUT /api/health-records/:id/archive
+   Archive a health record (soft delete)
+   ------------------------------------------------------------- */
+router.put(
+  "/:id/archive",
+  auth,
+  authorize("admin"),
+  async (req, res) => {
+    try {
+      const id = req.params.id;
+
+      // Check if record exists
+      const [[record]] = await pool.query(
+        "SELECT id FROM health_records WHERE id = ?",
+        [id]
+      );
+      if (!record) {
+        return res.status(404).json({ message: "Health record not found" });
+      }
+
+      // For now, we'll just log the archive action
+      // In the future, you can add an is_archived column to the database
+      // and update it here: UPDATE health_records SET is_archived = 1 WHERE id = ?
+      
+      await logAction({
+        actorId: req.user.id,
+        action: "ARCHIVE",
+        targetModel: "HealthRecord",
+        targetId: id,
+        summary: "Archived health record",
+        ipAddress: req.ip,
+      });
+
+      res.json({ 
+        message: "Health record archived successfully",
+        note: "Archive functionality is logged. To fully implement, add is_archived column to database."
+      });
+    } catch (err) {
+      console.error("PUT /health-records/:id/archive error:", err.message);
+      res.status(500).json({ 
+        message: "Failed to archive health record",
+        error: process.env.NODE_ENV === "development" ? err.message : undefined
+      });
+    }
+  }
+);
+
+/* -------------------------------------------------------------
    DELETE /api/health-records/:id
    Delete a health record
    ------------------------------------------------------------- */

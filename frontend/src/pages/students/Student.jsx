@@ -387,7 +387,10 @@ const Student = () => {
       width: "100%"
     }}>
       {/* NAVBAR */}
-      <Navbar onMenuClick={handleDrawerToggle} />
+      <Navbar 
+        onMenuClick={handleDrawerToggle} 
+        onViewNotifications={() => handleSectionChange("notifications")}
+      />
 
       {/* SIDEBAR + CONTENT */}
       <Box sx={{

@@ -29,7 +29,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { Button as AntButton, Space } from "antd";
-import { PrinterOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PrinterOutlined, EditOutlined, FolderOpenOutlined } from "@ant-design/icons";
 import { Search as SearchIcon } from "@mui/icons-material";
 
 /* -------------------------------------------------------------------------- */
@@ -161,14 +161,25 @@ const HealthRecords = () => {
 
 
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this record?")) return;
+  const handleArchive = async (id) => {
+    if (!window.confirm("Are you sure you want to archive this record?")) return;
     try {
-      await api.delete(`/api/health-records/${id}`);
+      // Update the record to mark it as archived
+      await api.put(`/api/health-records/${id}/archive`);
       await loadHealthRecords();
     } catch (err) {
-      console.error("Failed to delete record", err);
-      alert("Failed to delete record");
+      console.error("Failed to archive record", err);
+      alert("Failed to archive record. The record will be kept for now.");
+    }
+  };
+
+  const handleEdit = (record) => {
+    // Navigate to edit page or open edit modal
+    if (record.record_type === "examination") {
+      // For examination records, you might want to navigate to an edit page
+      alert("Edit functionality for examinations will be implemented soon.");
+    } else {
+      alert("Edit functionality for logbook visits will be implemented soon.");
     }
   };
 
@@ -376,11 +387,18 @@ const HealthRecords = () => {
                           )}
                           <AntButton
                             size="small"
-                            danger
-                            icon={<DeleteOutlined />}
-                            onClick={() => handleDelete(row.id)}
+                            type="primary"
+                            icon={<EditOutlined />}
+                            onClick={() => handleEdit(row)}
                           >
-                            
+                            Edit
+                          </AntButton>
+                          <AntButton
+                            size="small"
+                            icon={<FolderOpenOutlined />}
+                            onClick={() => handleArchive(row.id)}
+                          >
+                            Archive
                           </AntButton>
                         </Space>
                       </TableCell>

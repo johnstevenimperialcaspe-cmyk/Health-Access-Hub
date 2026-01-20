@@ -402,7 +402,10 @@ const NonAcademic = () => {
       overflow: "hidden",
       width: "100%"
     }}>
-      <Navbar onMenuClick={handleDrawerToggle} />
+      <Navbar 
+        onMenuClick={handleDrawerToggle} 
+        onViewNotifications={() => handleSectionChange("notifications")}
+      />
 
       <Box 
         display="flex"

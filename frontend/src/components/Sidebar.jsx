@@ -42,11 +42,6 @@ const Sidebar = ({ role, currentSection, onSectionChange, mobileOpen, onMobileCl
       label: "Appointments",
       section: "appointments",
     },
-    {
-      icon: <NotificationsIcon />,
-      label: "Notifications",
-      section: "notifications",
-    },
   ];
 
   // ---------- Role-specific items ----------
@@ -83,21 +78,10 @@ const Sidebar = ({ role, currentSection, onSectionChange, mobileOpen, onMobileCl
   if (role === "admin") {
     roleItems.push(
       {
-        icon: <SchoolIcon />,
-        label: "Student Records",
-        section: "student-records",
-      },
-      {
         icon: <PeopleIcon />,
-        label: "Faculty Records",
-        section: "faculty-records",
+        label: "Patient Records",
+        section: "patient-records",
       },
-      {
-        icon: <PeopleIcon />,
-        label: "Non-Academic Records",
-        section: "non-academic-records",
-      },
-
       {
         icon: <PeopleIcon />,
         label: "Users",
