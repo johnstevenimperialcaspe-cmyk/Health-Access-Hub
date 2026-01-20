@@ -22,7 +22,7 @@ import {
   Circle as CircleIcon,
 } from "@mui/icons-material";
 import { formatDistanceToNow } from "date-fns";
-import api from "../config/api";
+import api from "../utils/axios";
 
 const NotificationBell = ({ onViewAll }) => {
   const [anchorEl, setAnchorEl] = useState(null);

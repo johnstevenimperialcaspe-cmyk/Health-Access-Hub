@@ -416,6 +416,9 @@ const Admin = () => {
       case "patient-records":
         loadPatientRecords();
         break;
+      case "patient-records":
+        loadPatientRecords();
+        break;
       case "student-records":
         loadStudents();
         break;
