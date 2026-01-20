@@ -1,6 +1,7 @@
 // src/pages/admin/HealthRecords.jsx
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import api from "../../utils/axios";
 import {
   Box,
@@ -166,10 +167,11 @@ const HealthRecords = () => {
     try {
       // Update the record to mark it as archived
       await api.put(`/api/health-records/${id}/archive`);
+      toast.success("Health record archived successfully");
       await loadHealthRecords();
     } catch (err) {
       console.error("Failed to archive record", err);
-      alert("Failed to archive record. The record will be kept for now.");
+      toast.error(err.response?.data?.message || "Failed to archive record");
     }
   };
 
